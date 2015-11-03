@@ -48,10 +48,9 @@ kgml_map.draw_relations = False
 kgml_map.show_compounds = False
 kgml_map.show_genes = False
 
-colorMapItems(notDE,'#D3D3D3', 1)
 os.chdir(args.outDir)
-koInMap = open(args.path + '_KO.txt', 'w')
 
+colorMapItems(notDE,'#D3D3D3', 1)
 colorMapItems(knownKOSet,'#666666', 10)
 
 # And rendering elements as an overlay
