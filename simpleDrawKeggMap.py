@@ -41,9 +41,9 @@ enhanceSet = knownKOSet # legacy from up/down reg script
 notDE = set([e for e in pathway.orthologs if not len(set(e.name.split()).intersection(enhanceSet))])
 
 kgml_map = KGMLCanvas(pathway, show_maps=True)
-kgml_map.import_imagemap = True
-#kgml_map.show_maps = False
-kgml_map.show_orthologs = True
+kgml_map.import_imagemap = True  # turn this off to allow all elements to go gray!
+kgml_map.show_maps = False
+kgml_map.show_orthologs = False
 kgml_map.draw_relations = False
 kgml_map.show_compounds = False
 kgml_map.show_genes = False
@@ -54,9 +54,9 @@ colorMapItems(notDE,'#D3D3D3', 1)
 colorMapItems(knownKOSet,'#666666', 10)
 
 # And rendering elements as an overlay
-#kgml_map.show_compounds = True
-#kgml_map.show_genes = True
-#kgml_map.show_orthologs = True
+kgml_map.show_compounds = True
+kgml_map.show_genes = True
+kgml_map.show_orthologs = True
 #kgml_map.draw_relations = True
 
 kgml_map.draw(args.path + '.pdf')
