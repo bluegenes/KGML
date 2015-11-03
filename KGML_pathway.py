@@ -14,31 +14,22 @@
 # Scotland,
 # UK
 #
-# The MIT License
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
 #
-# Copyright (c) 2010-2014 The James Hutton Institute
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
 #
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-# THE SOFTWARE.
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """ This module provides classes to represent a KGML Pathway Map
 
-The KGML definition is as of release KGML v0.7.1
+The KGML definition is as of release KGML v0.7.1 
 (http://www.kegg.jp/kegg/xml/docs/)
 
 Classes:
@@ -46,7 +37,7 @@ Pathway              Specifies graph information for the pathway map
 Relation             Specifies a relationship between two proteins or KOs, or
                       protein and compound. There is an implied direction to
                       the relationship in some cases.
-Reaction             A specific chemical reaction between a substrate and a
+Reaction             A specific chemical reaction between a substrate and a 
                      product.
 Entry                A node in the pathway graph
 Graphics             Entry subelement describing its visual representation
@@ -74,19 +65,19 @@ class Pathway(object):
         entries      Dictionary of entries in the pathway, keyed by node ID
         reactions    Set of reactions in the pathway
 
-        The name attribute has a restricted format, so we make it a property
-        and enforce the formatting.
+        The name attribute has a restricted format, so we make it a property and
+        enforce the formatting.
 
-        The Pathway object is the only allowed route for adding/removing
+        The Pathway object is the only allowed route for adding/removing 
         Entry, Reaction, or Relation elements.
 
-        Entries are held in a dictionary and keyed by the node ID for the
+        Entries are held in a dictionary and keyed by the node ID for the 
         pathway graph - this allows for ready access via the Reaction/Relation
-        etc. elements.  Entries must be added before reference by any other
+        etc. elements.  Entries must be added before reference by any other 
         element.
 
-        Reactions are held in a dictionary, keyed by node ID for the path.
-        The elements referred to in the reaction must be added before the
+        Reactions are held in a dictionary, keyed by node ID for the path.  
+        The elements referred to in the reaction must be added before the 
         reaction itself.
     """
     def __init__(self):
@@ -104,14 +95,12 @@ class Pathway(object):
         """ Return the pathway in prettified KGML format
         """
         header = '\n'.join(['<?xml version="1.0"?>',
-                            '<!DOCTYPE pathway SYSTEM ' +
-                            '"http://www.genome.jp/kegg/xml/' +
-                            'KGML_v0.7.1_.dtd">',
-                            '<!-- Created by KGML_Pathway.py %s -->' %
-                            time.asctime()])
+  '<!DOCTYPE pathway SYSTEM "http://www.genome.jp/kegg/xml/KGML_v0.7.1_.dtd">',
+  '<!-- Created by KGML_Pathway.py %s -->' % time.asctime()])
         rough_xml = header + ET.tostring(self.element, 'utf-8')
         reparsed = minidom.parseString(rough_xml)
         return reparsed.toprettyxml(indent="  ")
+                  
 
     def add_entry(self, entry):
         """ Add an Entry element to the pathway
@@ -129,7 +118,7 @@ class Pathway(object):
         assert isinstance(entry.id, (int, long)), \
             "Node ID must be an integer, got %s (%s)" % (type(entry.id),
                                                          entry.id)
-        # We need to remove the entry from any other elements that may
+        # We need to remove the entry from any other elements that may 
         # contain it, which means removing those elements
         # TODO
         del self.entries[entry.id]
@@ -152,7 +141,7 @@ class Pathway(object):
         assert isinstance(reaction.id, (int, long)), \
             "Node ID must be an integer, got %s (%s)" % (type(reaction.id),
                                                          reaction.id)
-        # We need to remove the reaction from any other elements that may
+        # We need to remove the reaction from any other elements that may 
         # contain it, which means removing those elements
         # TODO
         del self._reactions[reaction.id]
@@ -177,7 +166,7 @@ class Pathway(object):
                   'Organism: %s' % self.org,
                   'Entries: %d' % len(self.entries),
                   'Entry types:']
-        for t in ['ortholog', 'enzyme', 'reaction',
+        for t in ['ortholog', 'enzyme', 'reaction', 
                   'gene', 'group', 'compound', 'map']:
             etype = [e for e in self.entries.values() if e.type == t]
             if len(etype):
@@ -187,26 +176,21 @@ class Pathway(object):
     # Assert correct formatting of the pathway name, and other attributes
     def getname(self):
         return self._name
-
     def setname(self, value):
         assert value.startswith('path:'), \
             "Pathway name should begin with 'path:', got %s" % value
         self._name = value
-
     def delname(self):
         del self._name
 
     def getnumber(self):
         return self._number
-
     def setnumber(self, value):
         self._number = int(value)
-
     def delnumber(self):
         del self._number
 
-    name = property(getname, setname, delname,
-                    "The KEGGID for the pathway map")
+    name = property(getname, setname, delname, "The KEGGID for the pathway map")
     number = property(getnumber, setnumber, delnumber, "The KEGG map number")
 
     @property
@@ -298,14 +282,14 @@ class Entry(object):
         type         The type of the entry
         link         URL of information about the entry
         reaction     List of KEGG IDs of the corresponding reactions (integer)
-        graphics     List of Graphics objects describing the Entry's visual
+        graphics     List of Graphics objects describing the Entry's visual 
                      representation
         components   List of component node ID for this Entry ('group')
         alt          List of alternate names for the Entry
 
-        NOTE: The alt attribute represents a subelement of the substrate and
+        NOTE: The alt attribute represents a subelement of the substrate and 
               product elements in the KGML file
-    """
+    """    
     def __init__(self):
         self._id = None
         self._names = []
@@ -326,19 +310,19 @@ class Entry(object):
                   'Type: %s' % self.type,
                   'Components: %s' % self.components,
                   'Reactions: %s' % self.reaction,
-                  'Graphics elements: %d %s' % (len(self.graphics),
+                  'Graphics elements: %d %s' % (len(self.graphics), 
                                                 self.graphics)]
         return '\n'.join(outstr) + '\n'
 
     def add_component(self, element):
-        """ If the Entry is already part of a pathway, make sure
+        """ If the Entry is already part of a pathway, make sure 
             the component already exists
         """
         if self._pathway is not None:
             assert element.id in self._pathway.entries, \
                 "Component %s is not an entry in the pathway" % value
         self.components.add(element)
-
+    
     def remove_component(self, value):
         """ Remove the entry with the passed ID from the group
         """
@@ -348,7 +332,7 @@ class Entry(object):
         """ Add the Graphics entry
         """
         self.graphics.append(entry)
-
+    
     def remove_graphics(self, entry):
         """ Remove the Graphics entry with the passed ID from the group
         """
@@ -357,36 +341,30 @@ class Entry(object):
     # Names may be given as a space-separated list of KEGG identifiers
     def getname(self):
         return ' '.join(self._names)
-
     def setname(self, value):
         self._names = value.split()
-
     def delname(self):
         self._names = []
 
     # Reactions may be given as a space-separated list of KEGG identifiers
     def getreaction(self):
         return ' '.join(self._reactions)
-
     def setreaction(self, value):
         self._reactions = value.split()
-
     def delreaction(self):
         self._reactions = []
 
     # We make sure that the node ID is an integer
     def getid(self):
         return self._id
-
     def setid(self, value):
         self._id = int(value)
-
     def delid(self):
         del self._id
 
-    id = property(getid, setid, delid,
+    id = property(getid, setid, delid, 
                   "The pathway graph node ID for the Entry")
-    name = property(getname, setname, delname,
+    name = property(getname, setname, delname, 
                     "List of KEGG identifiers for the Entry")
     reaction = property(getreaction, setreaction, delreaction,
                         "List of reaction KEGG IDs for this Entry")
@@ -434,11 +412,10 @@ class Entry(object):
                 return True
         return False
 
-
 # Component
 class Component(object):
-    """ A subelement of the Entry element, used when the Entry is a complex
-        node, as described in release KGML v0.7.1
+    """ A subelement of the Entry element, used when the Entry is a complex 
+        node, as described in release KGML v0.7.1 
         (http://www.kegg.jp/kegg/xml/docs/)
 
         The Component acts as a collection (with type 'group', and typically
@@ -451,15 +428,13 @@ class Component(object):
     # We make sure that the node ID is an integer
     def getid(self):
         return self._id
-
     def setid(self, value):
         self._id = int(value)
-
     def delid(self):
         del self._id
 
-    id = property(getid, setid, delid,
-                  "The pathway graph node ID for the Entry")
+    id = property(getid, setid, delid, 
+                  "The pathway graph node ID for the Entry")    
 
     @property
     def element(self):
@@ -473,7 +448,7 @@ class Component(object):
 
 # Graphics
 class Graphics(object):
-    """ A subelement of Entry, specifying its visual representation, as
+    """ A subelement of Entry, specifying its visual representation, as 
         described in release KGML v0.7.1 (http://www.kegg.jp/kegg/xml/docs/)
 
         Attributes:
@@ -487,7 +462,7 @@ class Graphics(object):
         fgcolor      object foreground colour (hex RGB)
         bgcolor      object background colour (hex RGB)
 
-        Some attributes are present only for specific graphics types.  For
+        Some attributes are present only for specific graphics types.  For 
         example, line types do not (typically) have a width.
         We permit non-DTD attributes and attribute settings, such as
 
@@ -505,85 +480,67 @@ class Graphics(object):
         self.fgcolor = ''
         self.bgcolor = ''
         self._parent = parent
-
+    
     # We make sure that the XY coordinates, width and height are numbers
     def getx(self):
         return self._x
-
     def setx(self, value):
         self._x = float(value)
-
     def delx(self):
         del self._x
-
     def gety(self):
         return self._y
-
     def sety(self, value):
         self._y = float(value)
-
     def dely(self):
         del self._y
-
     def getwidth(self):
         return self._width
-
     def setwidth(self, value):
         self._width = float(value)
-
     def delwidth(self):
         del self._width
-
     def getheight(self):
         return self._height
-
     def setheight(self, value):
         self._height = float(value)
-
     def delheight(self):
         del self._height
 
     # We make sure that the polyline co-ordinates are integers, too
     def getcoords(self):
         return self._coords
-
     def setcoords(self, value):
         clist = [int(e) for e in value.split(',')]
         self._coords = [tuple(clist[i:i+2]) for i in range(0, len(clist), 2)]
-
     def delcoords(self):
         del self._coords
 
     # Set default colours
     def getfgcolor(self):
         return self._fgcolor
-
     def setfgcolor(self, value):
         if value == 'none':
-            self._fgcolor = '#000000'  # this default defined in KGML spec
+            self._fgcolor = '#000000' # this default defined in KGML spec
         else:
             self._fgcolor = value
-
     def delfgcolor(self):
         del self._fgcolor
-
     def getbgcolor(self):
         return self._bgcolor
-
     def setbgcolor(self, value):
         if value == 'none':
-            self._bgcolor = '#000000'  # this default defined in KGML spec
+            self._bgcolor = '#000000' # this default defined in KGML spec
         else:
             self._bgcolor = value
-
     def delbgcolor(self):
         del self._bgcolor
 
     x = property(getx, setx, delx, "The X coordinate for the graphics element")
     y = property(gety, sety, dely, "The Y coordinate for the graphics element")
-    width = property(getwidth, setwidth, delwidth,
+    width = property(getwidth, setwidth, delwidth, 
                      "The width of the graphics element")
-    height = property(getheight, setheight, delheight,
+    height = property(getheight, setheight, delheight, 
                       "The height of the graphics element")
     coords = property(getcoords, setcoords, delcoords,
                       "Polyline coordinates for the graphics element")
@@ -612,7 +569,7 @@ class Graphics(object):
                           ('width', '_width'), ('height', '_height')]:
             if getattr(self, attr) is not None:
                 graphics.attrib[n] = str(getattr(self, attr))
-        if self.type == 'line':  # Need to write polycoords
+        if self.type == 'line': # Need to write polycoords
             graphics.attrib['coords'] = \
                 ','.join([str(e) for e in chain.from_iterable(self.coords)])
         return graphics
@@ -620,8 +577,8 @@ class Graphics(object):
     @property
     def bounds(self):
         """ Return the bounds of the Graphics object as an [(xmin, ymin),
-            (xmax, ymax)] tuple.  Co-ordinates give the centre of the
-            circle, rectangle, roundrectangle elements, so we have to
+            (xmax, ymax)] tuple.  Co-ordinates give the centre of the 
+            circle, rectangle, roundrectangle elements, so we have to 
             adjust for the relevant width/height.
         """
         if self.type == 'line':
@@ -640,10 +597,9 @@ class Graphics(object):
         return (0.5 * (self.bounds[0][0] + self.bounds[1][0]),
                 0.5 * (self.bounds[0][1] + self.bounds[1][1]))
 
-
 # Reaction
 class Reaction(object):
-    """ This describes a specific chemical reaction between one or more
+    """ This describes a specific chemical reaction between one or more 
         substrates and one or more products.
 
         Attributes:
@@ -667,10 +623,10 @@ class Reaction(object):
         outstr = ['Reaction node ID: %s' % self.id,
                   'Reaction KEGG IDs: %s' % self.name,
                   'Type: %s' % self.type,
-                  'Substrates: %s' %
-                  ','.join([s.name for s in self.substrates]),
-                  'Products: %s' %
-                  ','.join([s.name for s in self.products]),
+                  'Substrates: %s' % \
+                      ','.join([s.name for s in self.substrates]),
+                  'Products: %s' % \
+                      ','.join([s.name for s in self.products]),
                   ]
         return '\n'.join(outstr) + '\n'
 
@@ -692,65 +648,59 @@ class Reaction(object):
         self._products.add(int(product_id))
 
     # The node ID is also the node ID of the Entry that corresponds to the
-    # reaction; we get the corresponding Entry when there is an associated
+    # reaction; we get the corresponding Entry when there is an associated 
     # Pathway
     def getid(self):
         return self._id
-
     def setid(self, value):
         self._id = int(value)
-
     def delid(self):
         del self._id
-
     id = property(getid, setid, delid, "Node ID for the reaction")
 
     # Names may show up as a space-separated list of several KEGG identifiers
     def getnames(self):
         return ' '.join(self._names)
-
     def setnames(self, value):
         self._names.extend(value.split())
-
     def delnames(self):
         del self.names
-
-    name = property(getnames, setnames, delnames,
-                    "List of KEGG identifiers for the reaction")
+    name = property(getnames, setnames, delnames, 
+                     "List of KEGG identifiers for the reaction")
 
     # products and substrates are read-only properties, returning lists
     # of Entry objects
-    @property
+    @property 
     def substrates(self):
         """ Return list of substrate Entry elements
         """
         return [self._pathway.entries[sid] for sid in self._substrates]
 
-    @property
+    @property 
     def products(self):
         """ Return list of product Entry elements
         """
         return [self._pathway.entries[pid] for pid in self._products]
 
-    @property
+    @property 
     def entry(self):
         """ Return the Entry corresponding to this reaction
         """
         return self._pathway.entries[self._id]
 
-    @property
+    @property 
     def reactant_ids(self):
         """ Return a list of substrate and product reactant IDs
         """
         return self._products.union(self._substrates)
 
-    @property
+    @property 
     def entry(self):
         """ Return the Entry corresponding to this reaction
         """
         return self._pathway.entries[self._id]
 
-    @property
+    @property 
     def element(self):
         """ Return KGML element describing the Reaction
         """
@@ -775,16 +725,14 @@ class Reaction(object):
 # Relation
 class Relation(object):
     """ This describes a relationship between two products, KOs, or protein
-        and compound, as described in release KGML v0.7.1
+        and compound, as described in release KGML v0.7.1 
         (http://www.kegg.jp/kegg/xml/docs/)
 
         Attributes:
-        entry1       The first Entry object node ID defining the relation
-                     (int)
-        entry2       The second Entry object node ID defining the relation
-                     (int)
+        entry1       The first Entry object node ID defining the relation (int)
+        entry2       The second Entry object node ID defining the relation (int)
         type         The relation type
-        subtypes     List of subtypes for the relation, as a list of
+        subtypes     List of subtypes for the relation, as a list of 
                      (name, value) tuples
     """
     def __init__(self):
@@ -809,30 +757,23 @@ class Relation(object):
         if self._pathway is not None:
             return self._pathway.entries[self._entry1]
         return self._entry1
-
     def setentry1(self, value):
         self._entry1 = int(value)
-
     def delentry1(self):
         del self._entry1
-
     def getentry2(self):
         if self._pathway is not None:
             return self._pathway.entries[self._entry2]
         return self._entry2
-
     def setentry2(self, value):
         self._entry2 = int(value)
-
     def delentry2(self):
         del self._entry2
 
-    entry1 = property(getentry1, setentry1, delentry1,
-                      "Entry1 of the relation")
-    entry2 = property(getentry2, setentry2, delentry2,
-                      "Entry2 of the relation")
+    entry1 = property(getentry1, setentry1, delentry1, "Entry1 of the relation")
+    entry2 = property(getentry2, setentry2, delentry2, "Entry2 of the relation")
 
-    @property
+    @property 
     def element(self):
         """ Return KGML element describing the Relation
         """
@@ -846,3 +787,4 @@ class Relation(object):
             subtype.attrib[name] = str(value)
             relation.append(subtype)
         return relation
+        

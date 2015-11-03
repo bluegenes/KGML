@@ -13,33 +13,23 @@
 # DD6 9LH,
 # Scotland,
 # UK
-# 
-# The MIT License
 #
-# Copyright (c) 2010-2014 The James Hutton Institute
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
 #
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
 #
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-# THE SOFTWARE.
-
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """ This module provides classes and functions to parse a KGML pathway map
 
-The KGML pathway map is parsed into the object structure defined in
+The KGML pathway map is parsed into the object structure defined in  
 KGML_Pathway.py in this module.
 
 Classes
@@ -60,9 +50,8 @@ try:
 except ImportError:
     import xml.etree.ElementTree as ElementTree
 
-
 def read(handle, debug=0):
-    """ Returns a single Pathway object.  There should be one and only
+    """ Returns a single Pathway object.  There should be one and only 
         one pathway in each file, but there may well be pathological
         examples out there.
     """
@@ -81,12 +70,11 @@ def read(handle, debug=0):
         raise ValueError("More than one pathway found in handle")
     return first
 
-
 def parse(handle, debug=0):
     """ Returns an iterator over Pathway elements
 
         handle               file handle to a KGML file for parsing
-        debug                integer for amount of debug information
+        debug                integer for amount of debug information 
                               to print
         This is a generator for the return of multiple Pathway objects.
     """
@@ -100,15 +88,14 @@ def parse(handle, debug=0):
             raise Exception(exc_txt)
     # Parse XML and return each Pathway
     for event, elem in \
-            ElementTree.iterparse(handle, events=('start', 'end')):
+            ElementTree.iterparse(handle, events=('start','end')):
         if event == "end" and elem.tag == "pathway":
             yield KGMLParser(elem).parse()
             elem.clear()
 
-
 class KGMLParser(object):
     """ Parse a KGML XML Pathway entry into a Pathway object
-    """
+    """ 
     def __init__(self, elem):
         self.entry = elem
 
@@ -183,7 +170,7 @@ class KGMLParser(object):
                 # This should warn us of any unimplemented tags
                 print "Warning: tag %s not implemented in parser" % element.tag
         return self.pathway
-
+        
 
 if __name__ == '__main__':
     # Check large metabolism
@@ -218,3 +205,4 @@ if __name__ == '__main__':
 
     # Test bounds of pathway
     print pathway.bounds
+    
