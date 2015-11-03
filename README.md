@@ -1,6 +1,10 @@
 #README.md - KGML
 
-#NOTE: This repository is now FROZEN and will not receive further development. For further details, see below.
+My slightly modified version of widdowquinn's KGML libraries for rendering KEGG maps. These are now incorporated into Biopython -- see https://github.com/widdowquinn/notebooks/blob/master/Biopython_KGML_intro.ipynb to use that version.
+
+----
+
+####NOTE: This repository is now FROZEN and will not receive further development. For further details, see below.
 
 The `KGML` module was incorporated into Biopython as of its [1.65 release](https://github.com/biopython/biopython/releases). Further development of the code will now continue there. Please make all pull requests against the latest version of the code in the Biopython GitHub repository, at [https://github.com/biopython/biopython](https://github.com/biopython/biopython)
 
